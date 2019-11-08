@@ -5,8 +5,11 @@ import com.crossoverjie.cim.common.enums.StatusEnum;
 import com.crossoverjie.cim.common.exception.CIMException;
 import com.crossoverjie.cim.common.pojo.CIMUserInfo;
 import com.crossoverjie.cim.common.res.BaseResponse;
+import com.crossoverjie.cim.route.config.AppConfiguration;
+import com.crossoverjie.cim.route.kit.MsgCallBacker;
 import com.crossoverjie.cim.route.service.AccountService;
 import com.crossoverjie.cim.route.service.UserInfoCacheService;
+import com.crossoverjie.cim.route.util.SpringBeanFactory;
 import com.crossoverjie.cim.route.vo.req.ChatReqVO;
 import com.crossoverjie.cim.route.vo.req.LoginReqVO;
 import com.crossoverjie.cim.route.vo.res.CIMServerResVO;
@@ -25,6 +28,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import static com.crossoverjie.cim.common.enums.StatusEnum.OFF_LINE;
 import static com.crossoverjie.cim.route.constant.Constant.ACCOUNT_PREFIX;
@@ -164,14 +168,28 @@ public class AccountServiceRedisImpl implements AccountService {
                 .build();
 
         Response response = okHttpClient.newCall(request).execute();
+        BaseResponse baseResponse = null;
         try {
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }
-            return JSONObject.parseObject(response.body().string(),BaseResponse.class);
-        }finally {
+            baseResponse = JSONObject.parseObject(response.body().string(),BaseResponse.class);
+        } catch (Exception e) {
+            e.getStackTrace();
+        } finally {
             response.body().close();
         }
+
+        if (baseResponse != null && baseResponse.isSuccess())
+            doMsgCallBack(sendUserId, groupReqVO);
+
+        return null;
+    }
+
+    public void doMsgCallBack(long sendUserId, ChatReqVO groupReqVO) {
+        ThreadPoolExecutor taskExecutor = SpringBeanFactory.getBean("taskExecutor", ThreadPoolExecutor.class);
+        AppConfiguration appConfiguration = SpringBeanFactory.getBean(AppConfiguration.class);
+        taskExecutor.submit(new MsgCallBacker(appConfiguration.getMsgCallBackUrl(), sendUserId, groupReqVO));
     }
 
     @Override

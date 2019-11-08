@@ -33,6 +33,9 @@ import java.util.concurrent.*;
 
 import static com.crossoverjie.cim.route.constant.Constant.OFFLINE_MESSAGE_PREFIX;
 import static com.crossoverjie.cim.route.constant.Constant.ROUTE_PREFIX;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Function:
@@ -51,7 +54,7 @@ public class BeanConfig {
     private AppConfiguration appConfiguration;
 
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @Bean
     public ZkClient buildZKClient() {
@@ -99,6 +102,12 @@ public class BeanConfig {
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true);
         return builder.build();
+    }
+
+    @Bean
+    public ThreadPoolExecutor taskExecutor() {
+        ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(0, 20, 1L, TimeUnit.MINUTES, new LinkedBlockingDeque(1000));
+        return taskExecutor;
     }
 
     @Bean

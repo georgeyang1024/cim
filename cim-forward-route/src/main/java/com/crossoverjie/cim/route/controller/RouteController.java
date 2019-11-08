@@ -175,6 +175,13 @@ public class RouteController {
         return res;
     }
 
+    @ApiOperation("默认 消息回调 API")
+    @RequestMapping(value = "msgCallBack", method = RequestMethod.POST)
+    @ResponseBody()
+    public BaseResponse<NULLBody> msgCallBack(@RequestBody MsgCallBackReqVo msgCallBackReqVo) throws Exception {
+        LOGGER.info("回调消息[{}]", msgCallBackReqVo.toString());
+        return BaseResponse.create(null,StatusEnum.SUCCESS);
+    }
     /**
      * 私聊路由,支持离线
      *
