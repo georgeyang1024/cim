@@ -66,8 +66,11 @@ public class CIMWSClient {
         while (true) {
             try {
                 Thread.sleep(10000);
-                if (webSocketSession != null)
-                    webSocketSession.sendMessage(new TextMessage(JSONObject.toJSONString(heartBeatRequest)));
+                if (webSocketSession != null) {
+                    String loginJson = JSONObject.toJSONString(heartBeatRequest);
+                    webSocketSession.sendMessage(new TextMessage(loginJson));
+                }
+
             } catch (Exception e) {
             }
         }
@@ -146,7 +149,8 @@ public class CIMWSClient {
         public void afterConnectionEstablished(WebSocketSession session) throws Exception {
             System.out.println("connected...........");
             webSocketSession = session;
-            session.sendMessage(new TextMessage(JSONObject.toJSONString(loginRequest)));
+            String loginJson = JSONObject.toJSONString(loginRequest);
+            session.sendMessage(new TextMessage(loginJson));
             super.afterConnectionEstablished(session);
         }
 
