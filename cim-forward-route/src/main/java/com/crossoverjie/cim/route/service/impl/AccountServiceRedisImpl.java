@@ -183,7 +183,7 @@ public class AccountServiceRedisImpl implements AccountService {
         if (baseResponse != null && baseResponse.isSuccess())
             doMsgCallBack(sendUserId, groupReqVO);
 
-        return null;
+        return baseResponse;
     }
 
     public void doMsgCallBack(long sendUserId, ChatReqVO groupReqVO) {
