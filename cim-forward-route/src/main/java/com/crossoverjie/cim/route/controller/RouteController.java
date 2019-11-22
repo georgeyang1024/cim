@@ -189,6 +189,8 @@ public class RouteController {
         }catch (CIMException e){
             res.setCode(e.getErrorCode());
             res.setMessage(e.getErrorMessage());
+        } catch (Exception e) {
+
         }
         return res;
     }
@@ -223,7 +225,7 @@ public class RouteController {
             //尝试获取接收消息用户的路由信息
             CIMServerResVO cimServerResVO = accountService.loadRouteRelatedByUserId(p2pRequest.getReceiveUserId());
             //推送消息
-            String url = "http://" + cimServerResVO.getIp() + ":" + cimServerResVO.getHttpPort() + "/sendMsg" ;
+            String url = "http://" + cimServerResVO.getIp() + ":" + cimServerResVO.getHttpPort() + "/sendMsg";
             ChatReqVO chatVO = new ChatReqVO(p2pRequest.getReceiveUserId(),p2pRequest.getMsg()) ;
             returnResponse = accountService.pushMsg(url,p2pRequest.getUserId(),chatVO);
         }catch (Exception e){

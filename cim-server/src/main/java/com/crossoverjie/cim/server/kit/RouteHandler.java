@@ -74,7 +74,14 @@ public class RouteHandler {
                 throw new IOException("Unexpected code " + response);
             }
         } finally {
-            response.body().close();
+            try {
+                response.body().close();
+            } catch (Exception e) {
+            }
+            try {
+                response.close();
+            } catch (Exception e) {
+            }
         }
     }
 
