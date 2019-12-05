@@ -22,6 +22,8 @@ public class AppConfiguration {
     @Value("${app.msgcallback.url}")
     private String msgCallBackUrl;
 
+    @Value("${access.net.host}")
+    private String netHost;
 
     @Value("${server.port}")
     private int port;
@@ -85,5 +87,13 @@ public class AppConfiguration {
 
     public void setMsgCallBackUrl(String msgCallBackUrl) {
         this.msgCallBackUrl = msgCallBackUrl;
+    }
+
+    public String getNetHost() {
+        return netHost;
+    }
+
+    public void setNetHost(String netHost) {
+        this.netHost = netHost;
     }
 }

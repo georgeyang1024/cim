@@ -7,6 +7,7 @@ import com.crossoverjie.cim.common.res.BaseResponse;
 import com.crossoverjie.cim.common.res.NULLBody;
 import com.crossoverjie.cim.common.route.algorithm.RouteHandle;
 import com.crossoverjie.cim.route.cache.ServerCache;
+import com.crossoverjie.cim.route.config.AppConfiguration;
 import com.crossoverjie.cim.route.service.AccountService;
 import com.crossoverjie.cim.route.service.ChatGroupService;
 import com.crossoverjie.cim.route.service.MsgStoreService;
@@ -55,6 +56,9 @@ public class RouteController {
 
     @Autowired
     private RouteHandle routeHandle ;
+
+    @Autowired
+    private AppConfiguration appConfiguration;
 
     @ApiOperation("群聊 API")
     @RequestMapping(value = "groupRoute", method = RequestMethod.POST)
@@ -277,7 +281,7 @@ public class RouteController {
             String server = routeHandle.routeServer(serverCache.getAll(),String.valueOf(loginReqVO.getUserId()));
             String[] serverInfo = server.split(":");
             CIMServerResVO vo = new CIMServerResVO(serverInfo[0], Integer.parseInt(serverInfo[1]),Integer.parseInt(serverInfo[2]));
-
+            vo.setHost(appConfiguration.getNetHost());
             //保存路由信息
             accountService.saveRouteInfo(loginReqVO,server);
 

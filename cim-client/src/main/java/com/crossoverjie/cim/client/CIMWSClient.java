@@ -22,9 +22,9 @@ import java.util.concurrent.TimeUnit;
 public class CIMWSClient {
     private static final MediaType mediaType = MediaType.parse("application/json");
 
-    private static final String groupRouteUrl = "http://localhost:8800";
-    private static final Long userId = 1572947580784L;
-    private static final String username = "1";
+    private static final String groupRouteUrl = "http://192.168.99.88:8680";
+    private static final Long userId = 1572919171950L;
+    private static final String username = "C1544509321001@out";
     private static WebSocketRequest loginRequest = null;
     private static WebSocketRequest heartBeatRequest = null;
     private static WebSocketSession webSocketSession;
@@ -42,7 +42,7 @@ public class CIMWSClient {
 
         String ws_uri = login(okHttpClient,userId,username);
         if (ws_uri == null) {
-            System.err.println("错误");
+            System.err.println("链接为空");
             System.exit(0);
             return;
         }
@@ -124,6 +124,8 @@ public class CIMWSClient {
         ResponseBody body = null;
         try {
             Response response = okHttpClient.newCall(request).execute();
+            int code = response.code();
+            System.out.println("code:" + code);
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }

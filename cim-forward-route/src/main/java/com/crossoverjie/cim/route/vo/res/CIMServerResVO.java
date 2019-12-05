@@ -14,6 +14,7 @@ public class CIMServerResVO implements Serializable {
     private String ip ;
     private Integer cimServerPort;
     private Integer httpPort;
+    private String host;
 
     public CIMServerResVO(String ip, Integer cimServerPort, Integer httpPort) {
         this.ip = ip;
@@ -43,5 +44,13 @@ public class CIMServerResVO implements Serializable {
 
     public void setHttpPort(Integer httpPort) {
         this.httpPort = httpPort;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 }
