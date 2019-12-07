@@ -71,4 +71,11 @@ public interface AccountService {
      * @throws Exception
      */
     void offLine(Long userId) throws Exception;
+
+    /**
+     * 判断用户是否在线
+     * @param userId
+     * @return
+     */
+    boolean isUserOnline(Long userId);
 }

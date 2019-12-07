@@ -10,10 +10,7 @@ import com.crossoverjie.cim.route.cache.ServerCache;
 import com.crossoverjie.cim.route.service.AccountService;
 import com.crossoverjie.cim.route.service.MsgStoreService;
 import com.crossoverjie.cim.route.service.UserInfoCacheService;
-import com.crossoverjie.cim.route.vo.req.ChatReqVO;
-import com.crossoverjie.cim.route.vo.req.LoginReqVO;
-import com.crossoverjie.cim.route.vo.req.P2PReqVO;
-import com.crossoverjie.cim.route.vo.req.RegisterInfoReqVO;
+import com.crossoverjie.cim.route.vo.req.*;
 import com.crossoverjie.cim.route.vo.res.CIMServerResVO;
 import com.crossoverjie.cim.route.vo.res.RegisterInfoResVO;
 import io.swagger.annotations.ApiOperation;
@@ -250,7 +247,26 @@ public class RouteController {
         return res;
     }
 
+    /**
+     * 获取所有在线用户
+     *
+     * @return
+     */
+    @ApiOperation("获取所有在线用户")
+    @RequestMapping(value = "isUserOnline", method = RequestMethod.POST)
+    @ResponseBody()
+    public BaseResponse<NULLBody> isUserOnline(@RequestBody UserIdReqVO userIdReqVO) throws Exception {
+        if (userIdReqVO == null || userIdReqVO.getUserId() == null) {
+            return BaseResponse.create(null,StatusEnum.FAIL);
+        }
 
+        boolean isOnline = accountService.isUserOnline(userIdReqVO.getUserId());
+        if (isOnline) {
+            return BaseResponse.create(null,StatusEnum.OFF_LINE);
+        }
+
+        return BaseResponse.create(null,StatusEnum.SUCCESS);
+    }
 
 
 
