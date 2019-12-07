@@ -402,7 +402,26 @@ public class RouteController {
         return res;
     }
 
+    /**
+     * 获取所有在线用户
+     *
+     * @return
+     */
+    @ApiOperation("获取所有在线用户")
+    @RequestMapping(value = "isUserOnline", method = RequestMethod.POST)
+    @ResponseBody()
+    public BaseResponse<NULLBody> isUserOnline(@RequestBody UserIdReqVO userIdReqVO) throws Exception {
+        if (userIdReqVO == null || userIdReqVO.getUserId() == null) {
+            return BaseResponse.create(null,StatusEnum.FAIL);
+        }
 
+        boolean isOnline = accountService.isUserOnline(userIdReqVO.getUserId());
+        if (isOnline) {
+            return BaseResponse.create(null,StatusEnum.OFF_LINE);
+        }
+
+        return BaseResponse.create(null,StatusEnum.SUCCESS);
+    }
 
 
 

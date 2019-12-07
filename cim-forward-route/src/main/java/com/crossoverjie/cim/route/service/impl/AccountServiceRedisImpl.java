@@ -203,4 +203,38 @@ public class AccountServiceRedisImpl implements AccountService {
         //删除登录状态
         userInfoCacheService.removeLoginStatus(userId);
     }
+
+    @Override
+    public boolean isUserOnline(Long userId) {
+        try {
+            //检查路由信息
+            CIMServerResVO cimServerResVO = this.loadRouteRelatedByUserId(userId);
+            //推送消息
+            String url = "http://" + cimServerResVO.getIp() + ":" + cimServerResVO.getHttpPort() + "/isUserOnline";
+
+            //检查客户端的服务器连接是否还有效果
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId",userId);
+            RequestBody requestBody = RequestBody.create(mediaType, jsonObject.toString());
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(requestBody)
+                    .build();
+
+            Response response = okHttpClient.newCall(request).execute();
+            try {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+                BaseResponse baseResponse =  JSONObject.parseObject(response.body().string(),BaseResponse.class);
+                return baseResponse.isSuccess();
+            }finally {
+                response.body().close();
+            }
+        } catch (Exception e) {
+
+        }
+        return false;
+    }
 }

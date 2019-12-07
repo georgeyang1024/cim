@@ -2,10 +2,14 @@ package com.crossoverjie.cim.server.controller;
 
 import com.crossoverjie.cim.common.enums.StatusEnum;
 import com.crossoverjie.cim.common.res.BaseResponse;
+import com.crossoverjie.cim.common.res.NULLBody;
+import com.crossoverjie.cim.server.util.SessionSocketHolder;
+import com.crossoverjie.cim.server.vo.req.UserIdReqVO;
 import com.crossoverjie.cim.server.vo.req.SendMsgReqVO;
 import com.crossoverjie.cim.common.constant.Constants;
 import com.crossoverjie.cim.server.server.CIMServer;
 import com.crossoverjie.cim.server.vo.res.SendMsgResVO;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.metrics.CounterService;
@@ -56,6 +60,24 @@ public class IndexController {
         res.setMessage(StatusEnum.SUCCESS.getMessage()) ;
         res.setDataBody(sendMsgResVO) ;
         return res ;
+    }
+
+    /**
+     * 获取用户是否在线的接口
+     * @param userIdReqVo
+     * @return
+     */
+    @ApiOperation("获取用户是否在线")
+    @RequestMapping(value = "isUserOnline",method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResponse<NULLBody> isUserOnline(@RequestBody UserIdReqVO userIdReqVo){
+        NioSocketChannel socketChannel = SessionSocketHolder.get(userIdReqVo.getUserId());
+
+        if (null == socketChannel) {
+            return BaseResponse.create(null,StatusEnum.OFF_LINE);
+        }
+
+        return BaseResponse.create(null,StatusEnum.SUCCESS);
     }
 
 }
