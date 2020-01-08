@@ -16,8 +16,8 @@ public class RemoveGroupMembersReqVo {
     @ApiModelProperty(required = true, value = "chatGroupId", example = "1545574049323")
     private Long chatGroupId ;
 
-    @NotNull(message = "移除人的 userId 不能为空")
-    @ApiModelProperty(required = true, value = "userId", example = "1545574049323,154557405,12358753432")
+    @NotNull(message = "移除人的 userIds 不能为空")
+    @ApiModelProperty(required = true, value = "userIds", example = "1545574049323,154557405,12358753432")
     private String userIds ;
 
     public Long getChatGroupId() {

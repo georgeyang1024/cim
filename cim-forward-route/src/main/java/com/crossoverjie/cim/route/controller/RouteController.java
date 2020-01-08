@@ -98,7 +98,7 @@ public class RouteController {
     @ResponseBody()
     public BaseResponse createChatGroup(@RequestBody CreateGroupReqVo createGroupReqVo) throws Exception {
         if (createGroupReqVo.getUserId() == null || createGroupReqVo.getChatGroupName() == null || createGroupReqVo.getChatGroupName().isEmpty())
-            return BaseResponse.create(NULLBody.create(), StatusEnum.FAIL);
+            return BaseResponse.create(NULLBody.create(), StatusEnum.VALIDATION_FAIL);
 
         String[] members = createGroupReqVo.getMembers().split(",");
         List<Long> memberIds = new LinkedList<>();
@@ -169,7 +169,7 @@ public class RouteController {
     @ResponseBody()
     public BaseResponse remoteGroupMembersRoute(@RequestBody RemoveGroupMembersReqVo addGroupMemberReqVo) throws Exception {
         if (addGroupMemberReqVo.getUserIds() == null || addGroupMemberReqVo.getUserIds().isEmpty() || addGroupMemberReqVo.getChatGroupId() == null)
-            return BaseResponse.create(null, StatusEnum.FAIL);
+            return BaseResponse.create(null, StatusEnum.VALIDATION_FAIL);
 
         boolean isExist = chatGroupService.isChatGroupExist(addGroupMemberReqVo.getChatGroupId());
         if (!isExist)

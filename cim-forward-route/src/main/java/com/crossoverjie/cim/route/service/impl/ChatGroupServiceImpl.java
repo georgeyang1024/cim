@@ -57,15 +57,15 @@ public class ChatGroupServiceImpl implements ChatGroupService {
         if (!chatGroupId.equals(userId))
             throw new CIMException(StatusEnum.ACCOUNT_EXIST);
 
-        //入群
-        userIds.remove(adminUserId);//移除群组不再前面的情况
+        //拉入群
         BoundZSetOperations<String, String> zSetOperations = redisTemplate.boundZSetOps(GROUP_PREFIX + chatGroupId);
-        zSetOperations.add(String.valueOf(adminUserId), 0);
         userIds.forEach((item) -> {
             //入群先后顺序以list排列为准,后续逐个加入按时间(秒)记录
             zSetOperations.add(String.valueOf(item), zSetOperations.size());
         });
-
+        String adminUserIdStr = String.valueOf(adminUserId);
+        zSetOperations.remove(adminUserIdStr);//移除
+        zSetOperations.add(adminUserIdStr, 0);//添加成第一位（群主）
         return chatGroupId;
     }
 
