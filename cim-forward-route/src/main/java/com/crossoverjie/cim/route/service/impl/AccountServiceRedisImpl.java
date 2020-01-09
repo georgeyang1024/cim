@@ -246,7 +246,7 @@ public class AccountServiceRedisImpl implements AccountService {
                 response.body().close();
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return false;
     }

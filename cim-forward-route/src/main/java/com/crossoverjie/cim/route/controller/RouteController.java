@@ -416,7 +416,7 @@ public class RouteController {
         }
 
         boolean isOnline = accountService.isUserOnline(userIdReqVO.getUserId());
-        if (isOnline) {
+        if (!isOnline) {
             return BaseResponse.create(null,StatusEnum.OFF_LINE);
         }
 

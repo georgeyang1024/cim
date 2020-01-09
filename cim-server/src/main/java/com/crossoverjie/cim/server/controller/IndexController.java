@@ -3,6 +3,7 @@ package com.crossoverjie.cim.server.controller;
 import com.crossoverjie.cim.common.enums.StatusEnum;
 import com.crossoverjie.cim.common.res.BaseResponse;
 import com.crossoverjie.cim.common.res.NULLBody;
+import com.crossoverjie.cim.server.util.SeesionWebSocketHolder;
 import com.crossoverjie.cim.server.util.SessionSocketHolder;
 import com.crossoverjie.cim.server.vo.req.UserIdReqVO;
 import com.crossoverjie.cim.server.vo.req.SendMsgReqVO;
@@ -71,13 +72,18 @@ public class IndexController {
     @RequestMapping(value = "isUserOnline",method = RequestMethod.POST)
     @ResponseBody
     public BaseResponse<NULLBody> isUserOnline(@RequestBody UserIdReqVO userIdReqVo){
-        NioSocketChannel socketChannel = SessionSocketHolder.get(userIdReqVo.getUserId());
-
-        if (null == socketChannel) {
-            return BaseResponse.create(null,StatusEnum.OFF_LINE);
+        NioSocketChannel weSocketChannel = SeesionWebSocketHolder.get(userIdReqVo.getUserId());
+        if (weSocketChannel != null) {
+            return BaseResponse.create(null,StatusEnum.SUCCESS);
         }
 
-        return BaseResponse.create(null,StatusEnum.SUCCESS);
+
+        NioSocketChannel socketChannel = SessionSocketHolder.get(userIdReqVo.getUserId());
+        if (socketChannel != null) {
+            return BaseResponse.create(null,StatusEnum.SUCCESS);
+        }
+
+        return BaseResponse.create(null,StatusEnum.OFF_LINE);
     }
 
 }
