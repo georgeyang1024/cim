@@ -59,7 +59,6 @@ public class SeesionWebSocketHolder {
                 return info ;
             }
         }
-
         return null;
     }
 

@@ -93,7 +93,7 @@ public class AccountServiceRedisImpl implements AccountService {
         String key = ACCOUNT_PREFIX + loginReqVO.getUserId();
         String userName = redisTemplate.opsForValue().get(key);
         if (null == userName) {
-            return StatusEnum.ACCOUNT_NOT_MATCH;
+            return StatusEnum.ACCOUNT_NOT_EXIST;
         }
 
         if (!userName.equals(loginReqVO.getUserName())) {

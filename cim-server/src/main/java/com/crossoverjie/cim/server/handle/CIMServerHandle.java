@@ -7,6 +7,7 @@ import com.crossoverjie.cim.common.pojo.CIMUserInfo;
 import com.crossoverjie.cim.common.protocol.CIMRequestProto;
 import com.crossoverjie.cim.common.util.NettyAttrUtil;
 import com.crossoverjie.cim.server.kit.ServerHeartBeatHandlerImpl;
+import com.crossoverjie.cim.server.util.SeesionWebSocketHolder;
 import com.crossoverjie.cim.server.util.SessionSocketHolder;
 import com.crossoverjie.cim.server.util.SpringBeanFactory;
 import io.netty.channel.ChannelFutureListener;
@@ -36,6 +37,10 @@ public class CIMServerHandle extends CimSimpleChannelInboundHandler<CIMRequestPr
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         //可能出现业务判断离线后再次触发 channelInactive
         CIMUserInfo userInfo = SessionSocketHolder.getUserId((NioSocketChannel) ctx.channel());
+        //尝试获取webSocket链接
+        if (userInfo == null) {
+            userInfo = SeesionWebSocketHolder.getUserId((NioSocketChannel) ctx.channel());
+        }
         if (userInfo != null){
             LOGGER.warn("[{}]触发 channelInactive 掉线!",userInfo.getUserName());
             userOffLine(userInfo, (NioSocketChannel) ctx.channel());

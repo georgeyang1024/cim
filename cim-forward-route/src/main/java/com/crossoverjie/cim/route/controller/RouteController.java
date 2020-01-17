@@ -319,13 +319,13 @@ public class RouteController {
     @ApiOperation("客户端下线")
     @RequestMapping(value = "offLine", method = RequestMethod.POST)
     @ResponseBody()
-    public BaseResponse<NULLBody> offLine(@RequestBody ChatReqVO groupReqVO) throws Exception {
+    public BaseResponse<NULLBody> offLine(@RequestBody ChatReqVO chatReqVO) throws Exception {
         BaseResponse<NULLBody> res = new BaseResponse();
 
-        CIMUserInfo cimUserInfo = userInfoCacheService.loadUserInfoByUserId(groupReqVO.getUserId());
-
-        LOGGER.info("下线用户[{}]", cimUserInfo.toString());
-        accountService.offLine(groupReqVO.getUserId());
+        CIMUserInfo cimUserInfo = userInfoCacheService.loadUserInfoByUserId(chatReqVO.getUserId());
+        if (cimUserInfo != null)
+            LOGGER.info("下线用户[{}]", cimUserInfo.toString());
+        accountService.offLine(chatReqVO.getUserId());
 
         res.setCode(StatusEnum.SUCCESS.getCode());
         res.setMessage(StatusEnum.SUCCESS.getMessage());
@@ -345,6 +345,13 @@ public class RouteController {
 
         //登录校验
         StatusEnum status = accountService.login(loginReqVO);
+        if (status == StatusEnum.ACCOUNT_NOT_EXIST) {//自动注册
+            RegisterInfoResVO registerInfoResVO = new RegisterInfoResVO(loginReqVO.getUserId(),loginReqVO.getUserName());
+            registerInfoResVO = accountService.register(registerInfoResVO);
+            loginReqVO.setUserId(registerInfoResVO.getUserId());
+            loginReqVO.setUserName(registerInfoResVO.getUserName());
+            status = accountService.login(loginReqVO);
+        }
         if (status == StatusEnum.SUCCESS) {
 
             String server = routeHandle.routeServer(serverCache.getAll(),String.valueOf(loginReqVO.getUserId()));

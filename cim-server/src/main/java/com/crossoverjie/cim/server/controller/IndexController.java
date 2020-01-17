@@ -72,13 +72,11 @@ public class IndexController {
     @RequestMapping(value = "isUserOnline",method = RequestMethod.POST)
     @ResponseBody
     public BaseResponse<NULLBody> isUserOnline(@RequestBody UserIdReqVO userIdReqVo){
-        NioSocketChannel weSocketChannel = SeesionWebSocketHolder.get(userIdReqVo.getUserId());
-        if (weSocketChannel != null) {
-            return BaseResponse.create(null,StatusEnum.SUCCESS);
-        }
-
-
         NioSocketChannel socketChannel = SessionSocketHolder.get(userIdReqVo.getUserId());
+        //尝试webSocket渠道
+        if (socketChannel == null)
+            socketChannel = SeesionWebSocketHolder.get(userIdReqVo.getUserId());
+
         if (socketChannel != null) {
             return BaseResponse.create(null,StatusEnum.SUCCESS);
         }

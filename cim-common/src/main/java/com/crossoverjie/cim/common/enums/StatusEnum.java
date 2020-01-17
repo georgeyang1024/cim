@@ -33,6 +33,9 @@ public enum StatusEnum {
     /** 登录信息不匹配 */
     ACCOUNT_NOT_MATCH("9100", "登录信息不匹配！"),
 
+    /** 账号不存在 */
+    ACCOUNT_NOT_EXIST("9101", "账号不存在！"),
+
     /** 请求限流 */
     REQUEST_LIMIT("6000", "请求限流"),
 

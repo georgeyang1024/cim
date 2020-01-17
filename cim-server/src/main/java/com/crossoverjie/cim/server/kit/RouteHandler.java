@@ -30,21 +30,25 @@ public class RouteHandler {
 
     /**
      * 用户下线
+     *
      * @param userInfo
      * @param channel
      * @throws IOException
      */
-    public void userOffLine(CIMUserInfo userInfo, NioSocketChannel channel) throws IOException {
-        if (userInfo != null){
+    public void userOffLine(CIMUserInfo userInfo, NioSocketChannel channel) {
+        SessionSocketHolder.remove(channel);
+        SeesionWebSocketHolder.remove(channel);
+        if (userInfo != null) {
             LOGGER.info("用户[{}]下线", userInfo.getUserName());
             SessionSocketHolder.removeSession(userInfo.getUserId());
             SeesionWebSocketHolder.removeSession(userInfo.getUserId());
             //清除路由关系
-            clearRouteInfo(userInfo);
+            try {
+                clearRouteInfo(userInfo);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        SessionSocketHolder.remove(channel);
-        SeesionWebSocketHolder.remove(channel);
-
     }
 
 
