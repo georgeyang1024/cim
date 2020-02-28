@@ -391,6 +391,25 @@ public class RouteController {
         return res;
     }
 
+    @ApiOperation("反注册账号")
+    @RequestMapping(value = "unregisterAccount", method = RequestMethod.POST)
+    @ResponseBody()
+    public BaseResponse<RegisterInfoResVO> unregisterAccount(@RequestBody LoginReqVO loginReqVO) throws Exception {
+        BaseResponse<RegisterInfoResVO> res = new BaseResponse();
+
+        boolean success = accountService.unregister(loginReqVO);
+
+        if (success) {
+            res.setCode(StatusEnum.SUCCESS.getCode());
+            res.setMessage(StatusEnum.SUCCESS.getMessage());
+        } else {
+            res.setCode(StatusEnum.FAIL.getCode());
+            res.setMessage(StatusEnum.FAIL.getMessage());
+        }
+
+        return res;
+    }
+
     /**
      * 获取所有在线用户
      *

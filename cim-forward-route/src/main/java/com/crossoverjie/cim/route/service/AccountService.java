@@ -31,7 +31,7 @@ public interface AccountService {
      * @param info 用户信息
      * @throws Exception
      */
-    boolean unregister(RegisterInfoResVO info) throws Exception;
+    boolean unregister(LoginReqVO info) throws Exception;
 
     /**
      * 登录服务

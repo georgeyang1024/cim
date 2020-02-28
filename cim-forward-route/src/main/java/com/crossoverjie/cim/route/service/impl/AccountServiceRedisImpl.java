@@ -75,13 +75,18 @@ public class AccountServiceRedisImpl implements AccountService {
     }
 
     @Override
-    public boolean unregister(RegisterInfoResVO info) throws Exception {
-        String key = ACCOUNT_PREFIX + info.getUserId();
-
-        String name = redisTemplate.opsForValue().get(info.getUserName());
-        if (null == name) {
+    public boolean unregister(LoginReqVO info) throws Exception {
+        String registerInfo = redisTemplate.opsForValue().get(info.getUserName());
+        if (null == registerInfo) {//注册信息空
             return false;
         }
+        String key = ACCOUNT_PREFIX + info.getUserId();
+        String registerName = redisTemplate.opsForValue().get(key);
+        if (registerName == null || registerName.isEmpty())
+            return false;
+        if (!registerName.equals(info.getUserName()))
+            return false;//校验不正确
+
         redisTemplate.delete(key);
         redisTemplate.delete(info.getUserName());
         return true;
