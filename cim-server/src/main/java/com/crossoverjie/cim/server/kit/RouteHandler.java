@@ -36,6 +36,12 @@ public class RouteHandler {
      * @throws IOException
      */
     public void userOffLine(CIMUserInfo userInfo, NioSocketChannel channel) {
+        if (channel == null || channel.isActive()) {
+            LOGGER.info("过滤新上线连接断开");
+            //channel是用户唯一的最新的连接通道
+            //前一个断线，没被检查出来之前，又马上被重新上，过滤
+            return;
+        }
         SessionSocketHolder.remove(channel);
         SeesionWebSocketHolder.remove(channel);
         if (userInfo != null) {

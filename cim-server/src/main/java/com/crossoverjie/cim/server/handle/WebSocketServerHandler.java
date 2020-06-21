@@ -111,8 +111,8 @@ public class WebSocketServerHandler extends CimSimpleChannelInboundHandler<Objec
         if (userInfo != null){
             LOGGER.warn("[{}]触发 channelInactive 掉线!",userInfo.getUserName());
             userOffLine(userInfo, (NioSocketChannel) ctx.channel());
-            ctx.channel().close();
         }
+        ctx.channel().close();
     }
 
 
